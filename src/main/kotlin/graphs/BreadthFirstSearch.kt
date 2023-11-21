@@ -1,22 +1,31 @@
 package graphs
 
 import java.util.*
+import kotlin.collections.LinkedHashSet
 
 class Graph<T> {
     private val adjacencyList = mutableMapOf<T, LinkedList<T>>()
 
-    fun addEdge(source: T, destination: T) {
+    fun addUndirectedEdge(source: T, destination: T) {
+        adjacencyList.putIfAbsent(source, LinkedList())
+        adjacencyList.putIfAbsent(destination, LinkedList())
+        adjacencyList[source]?.add(destination)
+        adjacencyList[destination]?.add(source)
+    }
+
+    fun addDirectedEdge(source: T, destination: T) {
         adjacencyList.putIfAbsent(source, LinkedList())
         adjacencyList.putIfAbsent(destination, LinkedList())
         adjacencyList[source]?.add(destination)
     }
 
-    fun bfs(startingVertex: T) {
-        val visitedVertices = mutableSetOf<T>()
+    fun bfs(startingVertex: T): Set<T> {
+        val visitedVertices = LinkedHashSet<T>()
         val queue = LinkedList<T>()
         queue.push(startingVertex)
         while (queue.isNotEmpty()) {
             val currentVertex = queue.poll()
+            visitedVertices.add(currentVertex)
             println("Visiting $currentVertex")
             adjacencyList[currentVertex]?.filterNot {
                 visitedVertices.contains(it)
@@ -25,21 +34,6 @@ class Graph<T> {
                 queue.add(it)
             }
         }
+        return visitedVertices
     }
-}
-
-fun main() {
-    val graph = Graph<Int>()
-    graph.addEdge(1, 5)
-    graph.addEdge(1, 2)
-    graph.addEdge(1, 0)
-
-    graph.addEdge(5, 2)
-
-    graph.addEdge(5, 6)
-    graph.addEdge(2, 6)
-    graph.addEdge(0, 6)
-    graph.addEdge(0, 10)
-
-    graph.bfs(1)
 }
