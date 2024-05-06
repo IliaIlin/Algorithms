@@ -7,37 +7,42 @@ class BreadthFirstSearchTest {
 
     @Test
     fun undirectedGraphTest() {
-        val graph = Graph<Int>()
-        graph.addUndirectedEdge(1, 5)
-        graph.addUndirectedEdge(1, 2)
-        graph.addUndirectedEdge(1, 0)
+        val graph = UndirectedGraph<Int>()
+        graph.addEdge(5, 4)
+        graph.addEdge(5, 3)
+        graph.addEdge(5, 8)
+        graph.addEdge(4, 3)
+        graph.addEdge(3, 6)
+        graph.addEdge(3, 0)
 
-        graph.addUndirectedEdge(5, 2)
-
-        graph.addUndirectedEdge(5, 6)
-        graph.addUndirectedEdge(2, 6)
-        graph.addUndirectedEdge(0, 6)
-        graph.addUndirectedEdge(0, 10)
-
-        assertThat(graph.bfs(1)).containsExactly(1, 5, 2, 0, 6, 10)
-        assertThat(graph.bfs(2)).containsExactly(2, 1, 5, 6, 0, 10)
+        assertThat(graph.bfs(5)).containsExactly(5, 4, 3, 8, 6, 0)
+        assertThat(graph.bfs(0)).containsExactly(0, 3, 5, 4, 6, 8)
     }
 
     @Test
     fun directedGraphTest() {
-        val graph = Graph<Int>()
-        graph.addDirectedEdge(1, 5)
-        graph.addDirectedEdge(1, 2)
-        graph.addDirectedEdge(1, 0)
+        val graph = DirectedGraph<Int>()
+        graph.addEdge(5, 4)
+        graph.addEdge(5, 3)
+        graph.addEdge(5, 8)
+        graph.addEdge(4, 3)
+        graph.addEdge(3, 6)
+        graph.addEdge(0, 3)
 
-        graph.addDirectedEdge(5, 2)
+        assertThat(graph.bfs(5)).containsExactly(5, 4, 3, 8, 6)
+        assertThat(graph.bfs(0)).containsExactly(0, 3, 6)
+    }
 
-        graph.addDirectedEdge(5, 6)
-        graph.addDirectedEdge(2, 6)
-        graph.addDirectedEdge(0, 6)
-        graph.addDirectedEdge(0, 10)
+    @Test
+    fun binaryTreeTest() {
+        val tree = BinaryTreeNode(5).apply {
+            left = BinaryTreeNode(4)
+            right = BinaryTreeNode(8).apply {
+                left = BinaryTreeNode(6)
+                right = BinaryTreeNode(9)
+            }
+        }
 
-        assertThat(graph.bfs(1)).containsExactly(1, 5, 2, 0, 6, 10)
-        assertThat(graph.bfs(2)).containsExactly(2, 6)
+        assertThat(tree.bfs()).containsExactly(5, 4, 8, 6, 9)
     }
 }
