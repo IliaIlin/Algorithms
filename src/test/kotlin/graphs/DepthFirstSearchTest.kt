@@ -3,8 +3,7 @@ package graphs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BreadthFirstSearchTest {
-
+class DepthFirstSearchTest {
     @Test
     fun undirectedGraphTest() {
         val graph = UndirectedGraph<Int>()
@@ -16,8 +15,8 @@ class BreadthFirstSearchTest {
         graph.addEdge(2, 3)
         graph.addEdge(4, 3)
 
-        assertThat(graph.bfs(0)).containsExactly(0, 1, 5, 2, 4, 3)
-        assertThat(graph.bfs(2)).containsExactly(2, 1, 3, 0, 4, 5)
+        assertThat(graph.iterativeDfs(0)).containsExactly(0, 1, 2, 3, 4, 5)
+        assertThat(graph.recursiveDfs(0)).containsExactly(0, 1, 2, 3, 4, 5)
     }
 
     @Test
@@ -31,20 +30,10 @@ class BreadthFirstSearchTest {
         graph.addEdge(2, 3)
         graph.addEdge(3, 4)
 
-        assertThat(graph.bfs(0)).containsExactly(0, 1, 5, 4)
-        assertThat(graph.bfs(2)).containsExactly(2, 1, 3, 4)
-    }
+        assertThat(graph.iterativeDfs(0)).containsExactly(0, 1, 4, 5)
+        assertThat(graph.recursiveDfs(0)).containsExactly(0, 1, 4, 5)
 
-    @Test
-    fun binaryTreeTest() {
-        val tree = BinaryTreeNode(5).apply {
-            left = BinaryTreeNode(4)
-            right = BinaryTreeNode(8).apply {
-                left = BinaryTreeNode(6)
-                right = BinaryTreeNode(9)
-            }
-        }
-
-        assertThat(tree.bfs()).containsExactly(5, 4, 8, 6, 9)
+        assertThat(graph.iterativeDfs(2)).containsExactly(2, 1, 4, 3)
+        assertThat(graph.recursiveDfs(2)).containsExactly(2, 1, 4, 3)
     }
 }

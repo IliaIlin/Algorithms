@@ -10,17 +10,52 @@ interface Graph<T> {
         val visitedVertices = LinkedHashSet<T>()
         val queue = LinkedList<T>()
         queue.push(startingVertex)
+        visitedVertices.add(startingVertex)
+
         while (queue.isNotEmpty()) {
             val currentVertex = queue.poll()
-            visitedVertices.add(currentVertex)
-            this.getVerticesConnectedTo(currentVertex).filterNot {
-                visitedVertices.contains(it)
-            }.forEach {
-                visitedVertices.add(it)
-                queue.add(it)
+            for (neighbour in getVerticesConnectedTo(currentVertex)) {
+                if (visitedVertices.contains(neighbour)) {
+                    continue
+                }
+                queue.add(neighbour)
+                visitedVertices.add(neighbour)
             }
         }
         return visitedVertices
+    }
+
+    fun iterativeDfs(startingVertex: T): Set<T> {
+        val visitedVertices = LinkedHashSet<T>()
+        val stack = Stack<T>()
+        stack.push(startingVertex)
+        while (stack.isNotEmpty()) {
+            val currentVertex = stack.pop()
+            visitedVertices.add(currentVertex)
+            for (neighbour in getVerticesConnectedTo(currentVertex).reversed()) {
+                if (visitedVertices.contains(neighbour)) {
+                    continue
+                }
+                stack.push(neighbour)
+            }
+        }
+        return visitedVertices
+    }
+
+    fun recursiveDfs(startingVertex: T): Set<T> {
+        val visitedVertices = mutableSetOf<T>()
+        recursiveDfs(startingVertex, visitedVertices)
+        return visitedVertices
+    }
+
+    private fun recursiveDfs(currentVertex: T, visitedVertices: MutableSet<T>) {
+        visitedVertices.add(currentVertex)
+        for(neighbour in getVerticesConnectedTo(currentVertex)) {
+            if(visitedVertices.contains(neighbour)){
+                continue
+            }
+            recursiveDfs(neighbour, visitedVertices)
+        }
     }
 }
 
